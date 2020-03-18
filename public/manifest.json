@@ -4,9 +4,14 @@
     "description": "Visualize and find travel bans to and from different countries for the novel Coronavirus, nCOVID-19",
     "icons": [
       {
-        "src": "/images/icons-square.jpg",
+        "src": "/images/icons-square-192.jpg",
         "type": "image/jpg",
-        "sizes": "799*798"
+        "sizes": "192x192"
+      },
+      {
+        "src": "/images/icons-square-512.jpg",
+        "type": "image/jpg",
+        "sizes": "512x512"
       }
     ],
     "start_url": "/?source=pwa",
