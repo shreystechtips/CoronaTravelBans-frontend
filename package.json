@@ -1,7 +1,7 @@
 {
-  "name": "choropleth-mapchart-showing-vulnerability-by-country",
+  "name": "CoronaBan",
   "version": "1.0.0",
-  "description": "A react-simple-maps example showing a choropleth mapchart of countries' vulnerability according to the ND-GAIN index.",
+  "description": "A website to help visualize and find travel bans to and from different countries for the novel Coronavirus, nCOVID-19",
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {

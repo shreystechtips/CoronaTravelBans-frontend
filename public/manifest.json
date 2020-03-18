@@ -1,0 +1,17 @@
+{
+    "short_name": "CoronaBan",
+    "name": "Coronavirus Travel Bans",
+    "description": "Visualize and find travel bans to and from different countries for the novel Coronavirus, nCOVID-19",
+    "icons": [
+      {
+        "src": "/images/icons-square.jpg",
+        "type": "image/jpg",
+        "sizes": "799*798"
+      }
+    ],
+    "start_url": "/?source=pwa",
+    "background_color": "#a9a9a9",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#a9a9a9"
+  }
