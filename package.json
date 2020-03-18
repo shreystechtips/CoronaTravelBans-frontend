@@ -1,0 +1,30 @@
+{
+  "name": "choropleth-mapchart-showing-vulnerability-by-country",
+  "version": "1.0.0",
+  "description": "A react-simple-maps example showing a choropleth mapchart of countries' vulnerability according to the ND-GAIN index.",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "d3-fetch": "1.1.2",
+    "d3-scale": "3.1.0",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "react-scripts": "^3.4.0",
+    "react-simple-maps": "1.0.0-beta.0"
+  },
+  "devDependencies": {
+    "typescript": "3.3.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
