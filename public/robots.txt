@@ -1,0 +1,7 @@
+# Block Adsbot
+User-agent: AdsBot-Google
+Disallow: /
+
+# Group 2
+User-agent: *
+Allow: /

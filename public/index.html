@@ -10,7 +10,7 @@
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
 	<link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-	<link rel="shortcut icon" href="%PUBLIC_URL%/images/icons-square.jpg">
+  <link rel="shortcut icon" href="%PUBLIC_URL%/images/icons-square.jpg">
 	<!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -39,5 +39,14 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 </body>
-
+<script>
+  if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+        .then((reg) => {
+          console.log('Service worker registered.', reg);
+        });
+  });
+}
+  </script>
 </html>
