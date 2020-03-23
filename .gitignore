@@ -1,3 +1,5 @@
 node_modules
 src/data/test.json
 src/data/test.json
+build/
+.env
