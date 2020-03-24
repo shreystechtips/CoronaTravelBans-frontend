@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import "./styles.css";
 import ReactMapGL, { Layer } from "react-map-gl";
@@ -9,16 +9,16 @@ import BottomBar from "./nav/BottomBar";
 import firebase from "@firebase/app";
 import "@firebase/storage";
 
-require('dotenv').config();
+require("dotenv").config();
 var firebaseConfig = {
-  apiKey: ""+process.env.REACT_APP_API_KEY,
+  apiKey: "" + process.env.REACT_APP_API_KEY,
   authDomain: "corona-ban.firebaseapp.com",
   databaseURL: "https://corona-ban.firebaseio.com",
   projectId: "corona-ban",
   storageBucket: "corona-ban.appspot.com",
-  messagingSenderId: ""+process.env.REACT_APP_MESSAGING_SENDER,
-  appId: ""+process.env.REACT_APP_APP_ID,
-  measurementId: ""+process.env.REACT_APP_MEAS_ID
+  messagingSenderId: "" + process.env.REACT_APP_MESSAGING_SENDER,
+  appId: "" + process.env.REACT_APP_APP_ID,
+  measurementId: "" + process.env.REACT_APP_MEAS_ID
 };
 firebase.initializeApp(firebaseConfig);
 const storage = firebase.storage();
@@ -70,57 +70,80 @@ function getOpacity(ISO3) {
 }
 
 let result = [];
-let value;
-
-function MapChart() {
-  const TOKEN = ""+process.env.REACT_APP_MAPBOX_TOKEN
-  console.log(process.env)
-  const [viewport, setViewport] = useState({
-    width: "100vw",
-    height: "92vh",
-    latitude: 25,
-    longitude: 5,
-    zoom: 1,
-    minzoom: 1,
-    maxzoom: 8
-  });
-
-  let countryLayer = {
-    //here we are adding a layer containing the tileset we just uploaded
-    id: "countries", //this is the name of our layer, which we will need later
-    source: {
-      type: "vector",
-      url: ""+process.env.REACT_APP_MAPBOX_MAP // <--- Add the Map ID you copied here
-    },
-    "source-layer": ""+process.env.REACT_APP_SOURCE_LAYER, // <--- Add the source layer name you copied here
-    type: "fill",
-    paint: {
-      "fill-color": "#FF0000"
-      // 'fill-opacity':['+', 0, ['number', ['get', 'ADM0_A3_IS'].concat(result).map(x => getOpacity(x)/2) , 0]]
-    },
-    filter: ["in", "ADM0_A3_IS"].concat(result),
-    minzoom: 0,
-    maxzoom: 5
+let value = [];
+const TOKEN = "" + process.env.REACT_APP_MAPBOX_TOKEN;
+class MapChart extends React.Component {
+  state = {
+    viewport: {
+      latitude: 25,
+      longitude: 5,
+      zoom: 1,
+      minzoom: 1,
+      maxzoom: 8
+    }
   };
-  if (!isLoaded) {
-    getData().then(sk => {
-      console.log(value);
-      console.log(isLoaded);
-      countryLayer.filter = ["in", "ADM0_A3_IS"].concat(result);
-    });
+  _onViewportChange = viewport => this.setState({ viewport });
+  render() {
+    const { viewport } = this.state;
+    let layers = [];
+    let countryLayer = {
+      //here we are adding a layer containing the tileset we just uploaded
+      id: "countries", //this is the name of our layer, which we will need later
+      source: {
+        type: "vector",
+        url: "" + process.env.REACT_APP_MAPBOX_MAP // <--- Add the Map ID you copied here
+      },
+      "source-layer": "" + process.env.REACT_APP_SOURCE_LAYER, // <--- Add the source layer name you copied here
+      type: "fill",
+      paint: {
+        "fill-color": "#FF0000"
+        // 'fill-opacity':['+', 0, ['number', ['get', 'ADM0_A3_IS'].concat(result).map(x => getOpacity(x)/2) , 0]]
+      },
+      filter: ["in", "ADM0_A3_IS"].concat(result),
+      minzoom: 0,
+      maxzoom: 5
+    };
+    if (!isLoaded) {
+      getData().then(sk => {
+        value.forEach(function (element) {
+          let basicLayer = {
+            //here we are adding a layer containing the tileset we just uploaded
+            id: element.ISO3, //this is the name of our layer, which we will need later
+            source: {
+              type: "vector",
+              url: "" + process.env.REACT_APP_MAPBOX_MAP // <--- Add the Map ID you copied here
+            },
+            "source-layer": "" + process.env.REACT_APP_SOURCE_LAYER, // <--- Add the source layer name you copied here
+            type: "fill",
+            paint: {
+              "fill-color": "#FF0000",
+              "fill-opacity": (element.bans.length * 1.0) / top
+              // 'fill-opacity':['+', 0, ['number', ['get', 'ADM0_A3_IS'].concat(result).map(x => getOpacity(x)/2) , 0]]
+            },
+            filter: ["in", "ADM0_A3_IS"].concat(element.ISO3),
+            minzoom: 0,
+            maxzoom: 5
+          };
+          layers.push(<Layer key={basicLayer.id} {...basicLayer} />);
+        });
+      });
+    }
+    return (
+      <div style={{ height: "100%", position: "relative" }}>
+        <ReactMapGL
+          {...viewport}
+          width="100vw"
+          height="95vh"
+          position="absolute"
+          mapStyle="mapbox://styles/mapbox/dark-v10?optimize=true"
+          mapboxApiAccessToken={TOKEN}
+          onViewportChange={this._onViewportChange}
+        >
+          <Layer {...countryLayer} />
+        </ReactMapGL>
+      </div>
+    );
   }
-  return (
-    <ReactMapGL
-      {...viewport}
-      mapStyle="mapbox://styles/mapbox/dark-v10?optimize=true"
-      mapboxApiAccessToken={TOKEN}
-      onViewportChange={viewport => {
-        setViewport(viewport);
-      }}
-    >
-      <Layer {...countryLayer} />
-    </ReactMapGL>
-  );
 
   // else {
   //   return (
@@ -136,11 +159,11 @@ function MapChart() {
   //     </ReactMapGL>
   //   );
   // }
-  return (
-    <div style={{ height: "92vh", width: "100vw", fontSize: "100" }}>
-      Loading...
-    </div>
-  );
+  // return (
+  //   <div style={{ height: "92vh", width: "100vw", fontSize: "100" }}>
+  //     Loading...
+  //   </div>
+  // );
   // else {
   //   return (
   //     <div style={{ height: "92vh", width: "100vw", fontSize: "100" }}>

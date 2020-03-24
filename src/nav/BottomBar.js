@@ -8,9 +8,11 @@ const useStyles = makeStyles({
      background:"Gray",
      height:"5vh",
      minHeight:"50px",
+     width:"100vw",
      verticalAlign:"bottom",
      paddingBottom:0,
      marginBottom:0,
+     position:"absolute"
     }
   });
   
@@ -18,7 +20,6 @@ const useStyles = makeStyles({
     root: {
       color: 'white',
       height: '5vh',
-      padding: '0 30px',
     },
     label: {
       color:'#ffffff',
