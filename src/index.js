@@ -1,20 +1,32 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./styles.css";
-import { scaleLinear } from "d3-scale";
 
-import Map from "./Components/Map";
+import {Map} from "./Components/Map";
 import TopBar from "./nav/TopBar";
-import BottomBar from "./nav/BottomBar";
+// import BottomBar from "./nav/BottomBar";
 
-function App() {
+class App extends React.Component {
+ 
+  // updateLoading = (isLoaded) => {this.setState({ loaded:isLoaded })}
+  render(){
   return (
     <div style={{ height: "100%" }}>
       <TopBar />
-      <Map />
+      <Map/>
       {/* <BottomBar /> */}
     </div>
   );
+  // }
+  // else{
+  //   console.log(this.state.map)
+  //   return(
+  //     <div>
+  //       <PointSpreadLoading />
+  //     </div>
+  //   )
+  // }
+}
 }
 
 // var colorScale = scaleLinear().domain([0, top]).range(["#ffffff", "#ff0000"]);

@@ -3,7 +3,8 @@ import "@firebase/storage";
 import React from "react";
 import "../styles.css";
 import ReactMapGL, { Layer } from "react-map-gl";
-import 'mapbox-gl/dist/mapbox-gl.css';
+import "mapbox-gl/dist/mapbox-gl.css";
+import { PointSpreadLoading } from "react-loadingg";
 
 require("dotenv").config();
 var firebaseConfig = {
@@ -45,19 +46,23 @@ function getData() {
   });
 }
 
+const minZoom = 1;
+const maxZoom = 6;
+
 class Map extends React.Component {
   state = {
     viewport: {
-      latitude: 25,
-      longitude: 5,
-      zoom: 1,
-      minzoom: 1,
-      maxzoom: 8
+      latitude: 0,
+      longitude: 0,
+      zoom: 2,
+      minZoom: minZoom,
+      maxZoom: maxZoom,
+      maxBounds:[[-89,-180],[89,180]]
     },
     result: [],
     layers: []
   };
-  _onViewportChange = viewport => this.setState({ viewport });
+  _onViewportChange = viewport =>{this.setState({ viewport })};
   render() {
     const { viewport } = this.state;
     // let layers = [];
@@ -88,8 +93,8 @@ class Map extends React.Component {
         value.forEach(function (element) {
           if (!totalLayers.includes(element.ISO3)) {
             var addLayers = value
-            .filter(s => s.bans.length === element.bans.length)
-            .map(x => x.ISO3);
+              .filter(s => s.bans.length === element.bans.length)
+              .map(x => x.ISO3);
             let basicLayer = {
               //here we are adding a layer containing the tileset we just uploaded
               id: element.ISO3, //this is the name of our layer, which we will need later
@@ -105,8 +110,8 @@ class Map extends React.Component {
                 // 'fill-opacity':['+', 0, ['number', ['get', 'ADM0_A3_IS'].concat(result).map(x => getOpacity(x)/2) , 0]]
               },
               filter: ["in", "ADM0_A3_IS"].concat(addLayers),
-              minzoom: 0,
-              maxzoom: 5
+              minZoom: minZoom,
+              maxZoom: maxZoom,
             };
             layerArray.push(<Layer key={basicLayer.id} {...basicLayer} />);
             totalLayers = totalLayers.concat(addLayers);
@@ -115,10 +120,17 @@ class Map extends React.Component {
 
         this.setState({ layers: layerArray });
       });
+      return (
+        <div>
+          <PointSpreadLoading />
+        </div>
+      );
     }
+    // this.props.updateLoad(isLoaded);
     return (
-      <div style={{ height: "100%", position: "relative" }}>
+      <div style={{ height: "100%"}}>
         <ReactMapGL
+        // onLoad=
           {...viewport}
           width="100vw"
           height="100vh"
@@ -129,11 +141,12 @@ class Map extends React.Component {
         >
           {/* <Layer {...countryLayer} /> */}
           {this.state.layers}
-          {console.log(this.state.layers)}
         </ReactMapGL>
       </div>
     );
   }
 }
-
-export default Map;
+// module.exports.isLoaded = isLoaded;
+// module.exports.Map = Map;
+export { Map };
+// export default Map;
