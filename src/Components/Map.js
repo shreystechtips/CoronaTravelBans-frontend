@@ -1,8 +1,9 @@
 import firebase from "@firebase/app";
 import "@firebase/storage";
-import React, { useEffect } from "react";
+import React from "react";
 import "../styles.css";
 import ReactMapGL, { Layer } from "react-map-gl";
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 require("dotenv").config();
 var firebaseConfig = {
@@ -17,13 +18,12 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const storage = firebase.storage();
-let temp;
 var gsReference = storage.refFromURL(
   "gs://corona-ban.appspot.com/parsed_data.json"
 );
 
-let result = [];
 let value = [];
+let result;
 var top = 0;
 const TOKEN = "" + process.env.REACT_APP_MAPBOX_TOKEN;
 var isLoaded = false;
@@ -61,24 +61,23 @@ class Map extends React.Component {
   render() {
     const { viewport } = this.state;
     // let layers = [];
-    let countryLayer = {
-      //here we are adding a layer containing the tileset we just uploaded
-      id: "countries", //this is the name of our layer, which we will need later
-      source: {
-        type: "vector",
-        url: "" + process.env.REACT_APP_MAPBOX_MAP // <--- Add the Map ID you copied here
-      },
-      "source-layer": "" + process.env.REACT_APP_SOURCE_LAYER, // <--- Add the source layer name you copied here
-      type: "fill",
-      paint: {
-        "fill-color": "#FF0000"
-        // 'fill-opacity':['+', 0, ['number', ['get', 'ADM0_A3_IS'].concat(result).map(x => getOpacity(x)/2) , 0]]
-      },
-      filter: ["in", "ADM0_A3_IS"].concat(this.state.result),
-      minzoom: 0,
-      maxzoom: 5
-    };
-    let v = 1;
+    // let countryLayer = {
+    //   //here we are adding a layer containing the tileset we just uploaded
+    //   id: "countries", //this is the name of our layer, which we will need later
+    //   source: {
+    //     type: "vector",
+    //     url: "" + process.env.REACT_APP_MAPBOX_MAP // <--- Add the Map ID you copied here
+    //   },
+    //   "source-layer": "" + process.env.REACT_APP_SOURCE_LAYER, // <--- Add the source layer name you copied here
+    //   type: "fill",
+    //   paint: {
+    //     "fill-color": "#FF0000"
+    //     // 'fill-opacity':['+', 0, ['number', ['get', 'ADM0_A3_IS'].concat(result).map(x => getOpacity(x)/2) , 0]]
+    //   },
+    //   filter: ["in", "ADM0_A3_IS"].concat(this.state.result),
+    //   minzoom: 0,
+    //   maxzoom: 5
+    // };
     if (!isLoaded) {
       getData().then(sk => {
         this.setState({
