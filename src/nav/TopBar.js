@@ -5,7 +5,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import {  withStyles } from "@material-ui/core/styles";
-import PropTypes from 'prop-types';
 // import SwipeableTemporaryDrawer from "./Drawer"
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import List from "@material-ui/core/List";
@@ -16,7 +15,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import GitHubIcon from "@material-ui/icons/GitHub";
 import MenuIcon from "@material-ui/icons/Menu";
-import BugReportIcon from "@material-ui/icons/BugReport";
+// import BugReportIcon from "@material-ui/icons/BugReport";
 import "../styles.css";
 
 const useStyles = theme => ({
@@ -45,8 +44,10 @@ const useStyles = theme => ({
     marginRight:"0px",
   },
   listItem:{
-    paddingLeft:"5px",
-    paddingRight:"30px",
+    // paddingLeft:"px",
+    marginBottom:"5px",
+    marginLeft:"10px",
+    marginRight:"20px",
     color: "#FFFFFF",
     textDecoration:"none"
   }
@@ -61,6 +62,22 @@ class TopBar extends React.Component {
 
   render() {
     const {classes} = this.props;
+    
+    const links = [
+      {
+        text:"Frontend Code",
+        link:"https://github.com/shreystechtips/CoronaTravelBans-frontend",
+        icon:<GitHubIcon  className={classes.listItem}/>,
+        target:"_blank"
+      },
+      {
+        text:"Backend Code",
+        link:"https://github.com/shreystechtips/CoronaTravelBans-backend",
+        icon:<GitHubIcon  className={classes.listItem}/>,
+        target:"_blank"
+      }
+    ]
+
     const list = (
       <div
         role="presentation"
@@ -69,27 +86,19 @@ class TopBar extends React.Component {
         className = {classes.drawer}
         style={{height:"100vh"}}
       >
-        <List className={classes.listItem}>
-          {["Github"].map((text, index) => (
-            <a  className={classes.listItem} href="https://github.com/shreystechtips" target="_blank">
-            <ListItem button key={text} >
+        <List className={classes.list}>
+          {links.map((thing, index) => (
+            <a  key={thing.text} className={classes.listItem} href={thing.link} target={thing.target}>
+            <ListItem button  >
               <ListItemIcon>
-                <GitHubIcon className={classes.listItem} />
+                {thing.icon}
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={thing.text} />
             </ListItem>
             </a>
           ))}
         </List>
-        <Divider />
-        {/* <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List> */}
+        {/* <Divider /> */}
       </div>
     );
 
