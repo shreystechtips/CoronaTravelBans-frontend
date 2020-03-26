@@ -196,7 +196,7 @@ class Map extends React.Component {
       });
       return (
         <div>
-          <PointSpreadLoading />
+          <PointSpreadLoading color="#ff4a4a" />
         </div>
       );
     }
