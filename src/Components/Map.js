@@ -37,7 +37,7 @@ function getData() {
     return fetch(url)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
+        // console.log(data);
         isLoaded = true;
         value = data;
         result = data.filter(s => s.bans.length > 0).map(a => a.ISO3);
@@ -192,7 +192,7 @@ class Map extends React.Component {
         });
 
         this.setState({ layers: layerArray });
-        console.log(layerArray);
+        // console.log(layerArray);
       });
       return (
         <div>
