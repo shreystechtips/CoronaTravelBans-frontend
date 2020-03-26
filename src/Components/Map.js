@@ -6,8 +6,8 @@ import ReactMapGL, { Layer } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { PointSpreadLoading } from "react-loadingg";
 import iso3_codes from "../data/iso3_codes.json";
-import name_codes_en from "../data/name_codes_en.json"
-import names_iso3 from "../data/names_iso3.json"
+import name_codes_en from "../data/name_codes_en.json";
+import names_iso3 from "../data/names_iso3.json";
 
 require("dotenv").config();
 var firebaseConfig = {
@@ -75,15 +75,20 @@ class Map extends React.Component {
   };
 
   _onHover = event => {
-    const layer = this.state.layers
+    const layer = this.state.layers;
     const {
       features,
       srcEvent: { offsetX, offsetY }
     } = event;
     // console.log(features);
     const hoveredFeature =
-       features && features.find(f => iso3_codes.includes(f.properties.ADM0_A3_IS) || name_codes_en.includes(f.properties.name_en));
-      //  features &&
+      features &&
+      features.find(
+        f =>
+          iso3_codes.includes(f.properties.ADM0_A3_IS) ||
+          name_codes_en.includes(f.properties.name_en)
+      );
+    //  features &&
 
     this.setState({ hoveredFeature, x: offsetX, y: offsetY });
   };
@@ -92,19 +97,39 @@ class Map extends React.Component {
     const { hoveredFeature, x, y } = this.state;
     let ISO3 = "";
     try {
-      ISO3 = hoveredFeature.properties.NAME == null ? hoveredFeature.properties.name_en : hoveredFeature.properties.NAME;
-      ISO3 = names_iso3[ISO3]
+      if (hoveredFeature.properties.ADM0_A3_IS == null) {
+        ISO3 =
+          hoveredFeature.properties.NAME == null
+            ? hoveredFeature.properties.name_en
+            : hoveredFeature.properties.NAME;
+        ISO3 = names_iso3[ISO3];
+      } else {
+        ISO3 = hoveredFeature.properties.ADM0_A3_IS;
+      }
     } catch (error) {
       ISO3 = "";
     }
     return (
-      hoveredFeature &&
-      (
-        <div className="tooltip" style={{ left: x, top: y, fontSize:"medium" }}>
-          <div style={{fontWeight:"bold", fontSize:"large"}}>{hoveredFeature.properties.NAME == null ? hoveredFeature.properties.name_en : hoveredFeature.properties.NAME}</div>
-          <div>Travel Bans To {(value.find(x => x.ISO3 === ISO3) == null) ? 0 : value.find(x => x.ISO3 === ISO3).bans.length} Countries</div>
+      hoveredFeature && (
+        <div
+          className="tooltip"
+          style={{ left: x, top: y, fontSize: "medium" }}
+        >
+          <div style={{ fontWeight: "bold", fontSize: "large" }}>
+            {hoveredFeature.properties.NAME == null
+              ? hoveredFeature.properties.name_en
+              : hoveredFeature.properties.NAME}
+          </div>
           <div>
-          Banned by {value.filter(x => x.bans.includes(ISO3)).length} Countries
+            Travel Bans To{" "}
+            {value.find(x => x.ISO3 === ISO3) == null
+              ? 0
+              : value.find(x => x.ISO3 === ISO3).bans.length}{" "}
+            Countries
+          </div>
+          <div>
+            Banned by {value.filter(x => x.bans.includes(ISO3)).length}{" "}
+            Countries
           </div>
         </div>
       )
@@ -167,7 +192,7 @@ class Map extends React.Component {
         });
 
         this.setState({ layers: layerArray });
-        console.log(layerArray)
+        console.log(layerArray);
       });
       return (
         <div>
