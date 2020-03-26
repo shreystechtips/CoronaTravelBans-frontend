@@ -5,6 +5,9 @@ import "../styles.css";
 import ReactMapGL, { Layer } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { PointSpreadLoading } from "react-loadingg";
+import iso3_codes from "../data/iso3_codes.json";
+import name_codes_en from "../data/name_codes_en.json"
+import names_iso3 from "../data/names_iso3.json"
 
 require("dotenv").config();
 var firebaseConfig = {
@@ -30,6 +33,7 @@ const TOKEN = "" + process.env.REACT_APP_MAPBOX_TOKEN;
 var isLoaded = false;
 function getData() {
   return gsReference.getDownloadURL().then(function (url) {
+    // console.log(url);
     return fetch(url)
       .then(response => response.json())
       .then(data => {
@@ -51,18 +55,62 @@ const maxZoom = 6;
 
 class Map extends React.Component {
   state = {
+    hoveredFeature: null,
     viewport: {
       latitude: 0,
       longitude: 0,
       zoom: 2,
       minZoom: minZoom,
       maxZoom: maxZoom,
-      maxBounds:[[-89,-180],[89,180]]
+      maxBounds: [
+        [-179, -85],
+        [179, 85]
+      ]
     },
     result: [],
     layers: []
   };
-  _onViewportChange = viewport =>{this.setState({ viewport })};
+  _onViewportChange = viewport => {
+    this.setState({ viewport });
+  };
+
+  _onHover = event => {
+    const layer = this.state.layers
+    const {
+      features,
+      srcEvent: { offsetX, offsetY }
+    } = event;
+    // console.log(features);
+    const hoveredFeature =
+       features && features.find(f => iso3_codes.includes(f.properties.ADM0_A3_IS) || name_codes_en.includes(f.properties.name_en));
+      //  features &&
+
+    this.setState({ hoveredFeature, x: offsetX, y: offsetY });
+  };
+
+  _renderTooltip() {
+    const { hoveredFeature, x, y } = this.state;
+    let ISO3 = "";
+    try {
+      ISO3 = hoveredFeature.properties.NAME == null ? hoveredFeature.properties.name_en : hoveredFeature.properties.NAME;
+      ISO3 = names_iso3[ISO3]
+    } catch (error) {
+      ISO3 = "";
+    }
+    return (
+      hoveredFeature &&
+      (
+        <div className="tooltip" style={{ left: x, top: y, fontSize:"medium" }}>
+          <div style={{fontWeight:"bold", fontSize:"large"}}>{hoveredFeature.properties.NAME == null ? hoveredFeature.properties.name_en : hoveredFeature.properties.NAME}</div>
+          <div>Travel Bans To {(value.find(x => x.ISO3 === ISO3) == null) ? 0 : value.find(x => x.ISO3 === ISO3).bans.length} Countries</div>
+          <div>
+          Banned by {value.filter(x => x.bans.includes(ISO3)).length} Countries
+          </div>
+        </div>
+      )
+    );
+  }
+
   render() {
     const { viewport } = this.state;
     // let layers = [];
@@ -111,7 +159,7 @@ class Map extends React.Component {
               },
               filter: ["in", "ADM0_A3_IS"].concat(addLayers),
               minZoom: minZoom,
-              maxZoom: maxZoom,
+              maxZoom: maxZoom
             };
             layerArray.push(<Layer key={basicLayer.id} {...basicLayer} />);
             totalLayers = totalLayers.concat(addLayers);
@@ -119,6 +167,7 @@ class Map extends React.Component {
         });
 
         this.setState({ layers: layerArray });
+        console.log(layerArray)
       });
       return (
         <div>
@@ -128,20 +177,22 @@ class Map extends React.Component {
     }
     // this.props.updateLoad(isLoaded);
     return (
-      <div style={{ height: "100%"}}>
+      <div style={{ height: "100%" }}>
         <ReactMapGL
-        // onLoad=
+          // onLoad=
           {...viewport}
           width="100vw"
           height="100vh"
           position="absolute"
           mapStyle="mapbox://styles/mapbox/dark-v10?optimize=true"
           mapboxApiAccessToken={TOKEN}
+          onHover={this._onHover}
           onViewportChange={this._onViewportChange}
         >
           {/* <Layer {...countryLayer} /> */}
           {this.state.layers}
         </ReactMapGL>
+        {this._renderTooltip()}
       </div>
     );
   }
