@@ -33,21 +33,26 @@ const useStyles = theme => ({
     flexGrow: 1
   },
   list: {
-    width: "auto"
+    width: "auto",
   },
   fullList: {
     width: "auto"
   },
+  drawerPaper: {
+    width: "auto",
+  },
   drawer:{
-    background: "#757575",
+    background: "#383838",
     marginLeft:"0px",
     marginRight:"0px",
   },
   listItem:{
-    // paddingLeft:"px",
-    marginBottom:"5px",
-    marginLeft:"10px",
-    marginRight:"20px",
+    // marginBottom:"0px",
+    // marginTop:"0px",
+    paddingBottom:"9px",
+    paddingTop: "5px",
+    marginLeft:"5px",
+    marginRight:"40px",
     color: "#FFFFFF",
     textDecoration:"none"
   }
@@ -89,7 +94,7 @@ class TopBar extends React.Component {
         <List className={classes.list}>
           {links.map((thing, index) => (
             <a  key={thing.text} className={classes.listItem} href={thing.link} target={thing.target}>
-            <ListItem button  >
+            <ListItem button className={classes.listItem} >
               <ListItemIcon>
                 {thing.icon}
               </ListItemIcon>
@@ -133,9 +138,13 @@ class TopBar extends React.Component {
           </Toolbar>
         </AppBar>
         <SwipeableDrawer
+          
           open={this.state.isOpen}
           onClose={this.toggleDrawer(false)}
           onOpen={this.toggleDrawer(true)}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
         >
           {list}
         </SwipeableDrawer>
