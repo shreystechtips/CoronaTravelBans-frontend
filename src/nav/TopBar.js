@@ -15,6 +15,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import GitHubIcon from "@material-ui/icons/GitHub";
 import MenuIcon from "@material-ui/icons/Menu";
+import FavoriteIcon from '@material-ui/icons/Favorite';
 // import BugReportIcon from "@material-ui/icons/BugReport";
 import "../styles.css";
 
@@ -100,6 +101,9 @@ class TopBar extends React.Component {
           ))}
         </List>
         {/* <Divider /> */}
+        <Typography style={{position: "absolute",bottom:10,verticalAlign:"bottom",marginLeft:"10px",color:"#FFFFFF"}}>
+            Created with <FavoriteIcon style={{verticalAlign:"top"}}/> by <a href="https://github.com/shreystechtips" target="_blank" style={{textDecoration:"underline",color:"#FFFFFF"}}>Shrey Aeron</a>
+        </Typography>
       </div>
     );
 
