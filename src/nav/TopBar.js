@@ -38,13 +38,9 @@ const useStyles = theme => ({
   fullList: {
     width: "auto"
   },
-  drawerPaper: {
-    width: "auto",
-  },
   drawer:{
     background: "#383838",
-    marginLeft:"0px",
-    marginRight:"0px",
+    overflow:"hidden"
   },
   listItem:{
     // marginBottom:"0px",
@@ -142,9 +138,6 @@ class TopBar extends React.Component {
           open={this.state.isOpen}
           onClose={this.toggleDrawer(false)}
           onOpen={this.toggleDrawer(true)}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
         >
           {list}
         </SwipeableDrawer>
